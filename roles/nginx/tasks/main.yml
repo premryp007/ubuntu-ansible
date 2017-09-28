@@ -1,0 +1,19 @@
+---
+# tasks file for nginx
+- name: Installing nginx
+  apt: name=nginx state=present
+
+- name: Remove default configuration
+  file: path={{ item }} state=absent
+  with_items:
+    - /etc/nginx/sites-enabled/default
+    - /etc/nginx/sites-available/default
+
+- name: Copying default configuration
+  template: src=default dest=/etc/nginx/sites-enabled/default
+
+- name: Moving index file
+  template: src=index.html dest=/usr/share/nginx/html/index.php
+
+- name: Enable nginx
+  service: name=nginx state=restarted enabled=yes

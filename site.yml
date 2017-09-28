@@ -1,0 +1,31 @@
+---
+- name: apply configuration in apache2, nginx, mysq, postgres, misc
+  hosts: kalai
+
+  vars:
+    - domain_name: ansible.ahsan.in
+    - mysqlservice: mysql
+    - mysql_port: 3306
+    - dbuser: ahsan 
+    - dbpassword: ahsan123
+    - dbname: ahsan
+    - httpd_port: 80
+    - repository:
+    - update_apt_cache: yes
+    - apache_listen_ip: 80
+    - localip: 127.0.0.1
+    - host: localhost
+    - mysql_root_password: ahsan123
+
+  roles: 
+   - misc
+   - apache
+   - mysql
+   - nginx
+   - php
+   - phpmyadmin
+   - nodejs
+   - skype
+   - composer
+   - postgresql
+   - phppgadmin

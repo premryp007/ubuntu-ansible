@@ -1,0 +1,54 @@
+---
+# tasks file for misc
+
+- name: install notepadqq
+  apt_repository: repo="ppa:notepadqq-team/notepadqq" state=present
+
+- name: install python and aptitude
+  apt: name={{ item }} state=present
+  with_items:
+  - python-software-properties
+  - python-simplejson
+  - aptitude
+  - git
+  - zip
+  - mlocate  
+  - filezilla
+  - subversion
+  - vim
+  - curl
+  - putty  
+  - build-essential
+  - chromium-browser
+  - notepadqq
+  - meld
+  - intltool
+  - itstool
+  - gir1.2-gtksource-3.0
+  - libxml2-utils
+  - rapidsvn
+  - rabbitvcs-core
+  - mailutils
+
+- name: install repo
+  apt_repository: repo="ppa:ondrej/php" update_cache=yes
+
+- name: upgrade os
+  apt: upgrade=yes
+
+- name: Create directory
+  file: path=/opt/Spark state=directory
+
+- name: Move spark file
+  unarchive: src=Spark.zip dest=/opt/Spark/
+
+- name: Move config file of Spark
+  template: src=spark.desktop dest=/usr/share/applications/spark.desktop
+
+- name: Copy sudoers file for safety
+  command: cp -f /etc/sudoers /etc/sudoers.tmp
+
+- name: configure sudoers
+  lineinfile: dest=/etc/sudoers backup=yes state=present regexp='^%ahsan' insertafter="^root" line='ahsan   ALL=(ALL) /usr/systemctl, /bin/chmod, /bin/rm, /usr/bin/npm'
+  tags: config-sudoers
+

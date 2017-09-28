@@ -1,0 +1,6 @@
+<VirtualHost {{ localip }}:{{ httpd_port }}>
+    ServerName {{ domain_name }}
+    DocumentRoot /var/www/{{ domain_name }}
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

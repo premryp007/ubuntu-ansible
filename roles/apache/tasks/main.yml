@@ -1,0 +1,56 @@
+---
+# tasks file for apache
+#- hosts: ubuntu
+#  vars:
+#      http_port: 80
+#      domain: localhost
+
+#tasks:
+- name: install apache
+  apt: name=apache2 state=present
+
+- name: create virtualhost file
+  template: src=site-available.j2 dest=/etc/apache2/sites-available/{{ domain_name }}.conf
+
+- name: Disable the default site
+  action: command a2dissite 000-default
+
+- name: Enable new site
+  action: command a2ensite {{ domain_name }}
+# Enable modules
+
+- apache2_module: name=rewrite state=present
+  notify: restart=apache2
+
+# update host file
+#- name: Update host file
+#  template: src=hosts.j2 dest=/etc/hosts
+
+- name: Edit host file
+#  lineinfile: dest=/etc/hosts backup=yes state=present insertafter="^ff02::2" line='127.0.0.1 phpmyadmin.localhost'
+  lineinfile: dest=/etc/hosts backup=yes state=present insertafter="^ff02::2" line={{ item }}
+  with_items:
+    - 127.0.0.1 phpmyadmin.localhost
+    - 127.0.0.1 phppgadmin.localhost
+
+  tags: config-hosts
+
+- name: create directory
+  file: path=/var/www/{{ domain_name }} state=directory
+
+- name: index file
+  template: src=index.html dest=/var/www/{{ domain_name }}/index.html
+
+#- name: Disable php7.1
+#  action: command a2dismod php7.1
+
+#- name: enable php56
+#  action: command a2enmod php5.6
+
+#- name: configure php56
+#  action: command update-alternatives --set php /usr/bin/php5.6
+
+#restart apache
+- name: httpd state
+  service: name=apache2 state=stopped enabled=no
+  

@@ -1,0 +1,30 @@
+---
+# tasks file for nodejs
+
+- name: Add node key
+  apt_key:
+     url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+     state: present
+- name: Add Nodesource Apt Sources
+  become: yes
+  apt_repository:
+    repo: '{{ item }}'
+    state: present
+  with_items:
+    - 'deb https://deb.nodesource.com/node_6.x xenial main'
+    - 'deb-src https://deb.nodesource.com/node_6.x xenial main'
+
+- name: Install NodeJS and NPM
+  become: yes
+  apt:
+    name: '{{ item }}'
+    state: present
+#    update_cache: yes
+  with_items:
+    - nodejs
+
+- name: installing grunt and bower
+  npm: name={{ item }} state=present global=yes
+  with_items:
+   - grunt-cli
+   - bower

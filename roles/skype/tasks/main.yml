@@ -1,0 +1,17 @@
+---
+# tasks file for skype
+
+- name: Install dependenice
+  apt: name=libqtwebkit4 state=present
+
+- name: Install add i386 Arc
+  command: dpkg --add-architecture i386
+  args:
+    creates: /var/lib/dpkg/arch
+  when: ansible_architecture != 'i386'
+
+- name: Install Skype
+  apt: 
+#     deb: /tmp/skypeforlinux-64.deb
+     deb: http://192.168.1.35/skype-debian_4.3.0.37-1_i386.deb
+#      deb: https://download.skype.com/linux/skype-debian_4.3.0.37-1_i386.deb

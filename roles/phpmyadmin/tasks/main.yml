@@ -1,0 +1,11 @@
+---
+# tasks file for phpmyadmin
+
+- name: Installing phpmyadmin
+  apt: name=phpmyadmin state=present
+
+- name: Moving configuration file
+  template: src=phpmyadmin.conf dest=/etc/nginx/conf.d/phpmyadmin.conf
+
+- name: create directory
+  file: path=/var/log/phpmyadmin state=directory

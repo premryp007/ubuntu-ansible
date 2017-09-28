@@ -1,0 +1,32 @@
+---
+# tasks file for php
+
+- name: installing php5.6
+  apt: name={{ item }} state=present
+  with_items:
+      - php5.6
+      - php5.6-mysql
+      - php5.6-gd
+      - php5.6-xml
+      - php5.6-mbstring
+      - php5.6-curl
+      - php5.6-fpm
+      - libapache2-mod-php5.6
+      - php5.6-intl
+      - php5.6-dev
+      - php5.6-gettext
+      - php5.6-mcrypt
+      - php5.6-pgsql
+      - php
+
+- name: enable php-fpm 
+  service: name=php5.6-fpm state=restarted enabled=yes
+
+- name: Disable php7.1
+  action: command a2dismod php7.1
+
+- name: enable php56
+  action: command a2enmod php5.6
+
+- name: configure php56
+  action: command update-alternatives --set php /usr/bin/php5.6

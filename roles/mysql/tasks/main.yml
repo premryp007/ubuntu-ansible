@@ -1,0 +1,31 @@
+---
+# tasks file for mysql
+
+- name: Installing mysql
+  apt: name={{ item }} state=installed
+  with_items:
+   - mysql-client
+   - mysql-server
+   - mysql-common
+   - libmysqlclient-dev
+   - python3-dev
+   - python3-pip  
+   - python3-mysqldb 
+- name: mysql state
+  service: name=mysql state=restarted enabled=yes
+
+- name: Set MySQL root user password
+  mysql_user: name=root password={{ mysql_root_password }} host={{ item }} priv=*.*:ALL,GRANT state=present
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: Configure MySQL for easy access as root user
+  template: src=root.my.cnf.j2 dest=/root/.my.cnf mode=0600
+
+- name: Remove the MySQL test database
+  mysql_db: db=test state=absent login_user=root login_password={{ mysql_root_password }}
+
+- name: "Ensure MySQL is {{ mysql.start | ternary('started','stopped') }}"
+  service: name=mysql state=restarted enabled=yes

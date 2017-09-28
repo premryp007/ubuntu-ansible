@@ -1,0 +1,23 @@
+---
+# tasks file for phppgadmin
+
+- name: Install phppgadmin
+  apt: name=phpmyadmin state=present
+
+- name: create directoy
+  file: path=/var/log/phppgadmin state=directory
+
+- name: Copy configue file
+  template: src=phppgadmin.conf dest=/etc/nginx/conf.d/phppgadmin.conf
+
+- name: Restarted nginx
+  service: name=nginx state=restarted
+
+# Set file permissions
+- name: change permission
+  file: path={{ item }} mode=0777
+  with_items:
+   - /etc/hosts
+   - /etc/nginx/conf.d
+   - /usr/share/nginx/html
+   - /var/www/html
